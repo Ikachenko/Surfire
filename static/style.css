@@ -368,6 +368,14 @@ nav {
     position: relative;
 }
 
+.camera-box .camera-stream {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    background: #080d09;
+}
+
 .camera-box .camera-icon {
     font-size: 26px;
 }
@@ -652,4 +660,102 @@ footer {
     footer {
         flex-direction: column;
     }
+}
+
+/* YOLO DETECTION DISPLAY */
+
+.detection-metric {
+    transition: border-color 0.2s ease;
+    border: 1px solid transparent;
+}
+
+.detection-standby {
+    border-color: #31513b;
+}
+
+.detection-standby .metric-value {
+    color: var(--green);
+}
+
+.detection-smoke {
+    border-color: #715a2d;
+    background: #302819;
+}
+
+.detection-smoke .metric-value {
+    color: var(--amber);
+}
+
+.detection-fire {
+    border-color: #713b3b;
+    background: #321f20;
+}
+
+.detection-fire .metric-value {
+    color: var(--red);
+}
+
+.detection-warning .metric-value {
+    color: var(--amber);
+}
+
+.confidence-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 13px;
+    color: var(--muted);
+    font-size: 9px;
+    letter-spacing: 0.5px;
+}
+
+.confidence-row strong {
+    color: var(--text);
+    font-size: 11px;
+    font-variant-numeric: tabular-nums;
+}
+
+.confidence-track {
+    height: 5px;
+    background: #111a14;
+    border-radius: 5px;
+    margin-top: 7px;
+    overflow: hidden;
+}
+
+.confidence-fill {
+    height: 100%;
+    background: var(--green);
+    border-radius: 5px;
+    transition: width 0.3s ease;
+}
+
+.detection-smoke .confidence-fill {
+    background: var(--amber);
+}
+
+.detection-fire .confidence-fill {
+    background: var(--red);
+}
+
+.detection-warning .confidence-fill {
+    background: var(--amber);
+}
+
+#node01-camera-slot {
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.camera-box .camera-stream {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    background: #080d09;
 }

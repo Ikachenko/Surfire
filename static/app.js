@@ -106,6 +106,8 @@ function renderSummary(summary) {
 // NODE CARDS
 // --------------------------------------------------
 
+let cameraStreamElement = null;
+
 function renderNodes(nodes) {
     const container = document.getElementById("node-grid");
 
@@ -116,13 +118,27 @@ function renderNodes(nodes) {
             ? (node.demo ? "ONLINE · DEMO" : "ONLINE")
             : "PLACEHOLDER";
 
-        const detection = node.detection === "warning"
-            ? "WARNING"
-            : "STANDBY";
+        const hasDetection = node.detection === "warning";
 
-        const detectionColor = node.detection === "warning"
-            ? "var(--amber)"
-            : "var(--green)";
+        let detectionLabel = "STANDBY";
+        let detectionDetail = "No active detection";
+        let detectionClass = "detection-standby";
+
+        if (hasDetection) {
+            if (node.detection_class === "fire") {
+                detectionLabel = "POTENTIAL FIRE";
+                detectionDetail = "Fire classification";
+                detectionClass = "detection-fire";
+            } else if (node.detection_class === "fire-smoke") {
+                detectionLabel = "POTENTIAL SMOKE";
+                detectionDetail = "Fire/smoke classification";
+                detectionClass = "detection-smoke";
+            } else {
+                detectionLabel = "WARNING";
+                detectionDetail = "Unclassified detection";
+                detectionClass = "detection-warning";
+            }
+        }
 
         const cameraMessage = !online
             ? "Camera not installed"
@@ -136,9 +152,18 @@ function renderNodes(nodes) {
             ? escapeHTML(node.gas_raw)
             : "Awaiting telemetry";
 
-        const detectionDetail = node.detection === "warning"
-            ? `${escapeHTML(node.detection_class || "Detection")} · ${confidence(node.confidence)}`
-            : "No active detection";
+        const confidenceValue =
+            hasDetection && node.confidence !== null
+                ? Math.max(0, Math.min(1, node.confidence))
+                : null;
+
+        const confidenceText = confidenceValue !== null
+            ? confidence(confidenceValue)
+            : "—";
+
+        const confidenceWidth = confidenceValue !== null
+            ? `${confidenceValue * 100}%`
+            : "0%";
 
         return `
             <article class="node-card ${online ? "online" : "placeholder"}">
@@ -156,21 +181,43 @@ function renderNodes(nodes) {
 
                 <div class="camera-box">
                     <span class="camera-label">
-                        ${online ? "CAMERA 01" : "NO CAMERA"}
+                        ${online ? "CAMERA 01 · LIVE" : "NO CAMERA"}
                     </span>
-                    <div class="camera-icon">▣</div>
-                    <span>${cameraMessage}</span>
+
+                    ${node.id === "node-01" &&
+                    online &&
+                    node.camera_status === "online"
+                        ? `<div id="node01-camera-slot"></div>`
+                        : `
+                            <div class="camera-icon">▣</div>
+                            <span>${escapeHTML(cameraMessage)}</span>
+                        `
+                    }
                 </div>
 
                 <div class="node-metrics">
 
-                    <div class="metric">
+                    <div class="metric detection-metric ${detectionClass}">
                         <div class="metric-label">YOLO DETECTION</div>
-                        <div class="metric-value" style="color:${detectionColor}">
-                            ${detection}
+
+                        <div class="metric-value">
+                            ${detectionLabel}
                         </div>
+
                         <div class="metric-subtitle">
-                            ${detectionDetail}
+                            ${escapeHTML(detectionDetail)}
+                        </div>
+
+                        <div class="confidence-row">
+                            <span>CONFIDENCE</span>
+                            <strong>${confidenceText}</strong>
+                        </div>
+
+                        <div class="confidence-track">
+                            <div
+                                class="confidence-fill"
+                                style="width: ${confidenceWidth}"
+                            ></div>
                         </div>
                     </div>
 
@@ -186,8 +233,23 @@ function renderNodes(nodes) {
             </article>
         `;
     }).join("");
-}
 
+    const cameraSlot = document.getElementById("node01-camera-slot");
+
+    if (cameraSlot) {
+        if (!cameraStreamElement) {
+            cameraStreamElement = document.createElement("img");
+            cameraStreamElement.src = "/video_feed";
+            cameraStreamElement.alt = "Node 01 live camera feed";
+            cameraStreamElement.className = "camera-stream";
+        }
+
+        cameraSlot.appendChild(cameraStreamElement);
+    } else if (cameraStreamElement) {
+        cameraStreamElement.remove();
+        cameraStreamElement = null;
+    }
+}
 
 // --------------------------------------------------
 // NETWORK OVERVIEW
