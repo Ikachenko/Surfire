@@ -1,0 +1,225 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SurFire | Monitoring Dashboard</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+<div class="app">
+
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-icon">🔥</div>
+            <div>
+                <h1>SURFIRE</h1>
+                <span>FOREST MONITORING</span>
+            </div>
+        </div>
+
+        <div class="sidebar-label">MONITORING</div>
+
+        <nav>
+            <button class="nav-item active" data-page="dashboard">
+                <span>▦</span> Dashboard
+            </button>
+            <button class="nav-item" data-page="network">
+                <span>⌘</span> Network Overview
+            </button>
+            <button class="nav-item" data-page="incidents">
+                <span>◷</span> Past Incidents
+            </button>
+            <button class="nav-item" data-page="logs">
+                <span>≡</span> System Logs
+            </button>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div class="connection-indicator">
+                <span class="status-dot green"></span>
+                <span id="server-status">Connecting...</span>
+            </div>
+            <span class="version">SURFIRE PROTOTYPE · V0.1</span>
+        </div>
+    </aside>
+
+
+    <main class="main">
+
+        <header class="topbar">
+            <div>
+                <div class="breadcrumb">SURFIRE / <span id="current-section">DASHBOARD</span></div>
+                <h2 id="page-title">System Dashboard</h2>
+            </div>
+
+            <div class="topbar-right">
+                <span class="demo-label">DEMO DATA</span>
+                <span class="server-clock" id="clock">--:--:--</span>
+            </div>
+        </header>
+
+
+        <!-- DASHBOARD PAGE -->
+        <section class="page active" id="page-dashboard">
+
+            <div class="section-heading">
+                <div>
+                    <h3>System Overview</h3>
+                    <p>Live monitoring network statistics</p>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+
+                <div class="stat-card">
+                    <div class="stat-label">ACTIVE NODES</div>
+                    <div class="stat-value" id="active-nodes">--</div>
+                    <div class="stat-description">Currently online</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-label">ACTIVE INCIDENTS</div>
+                    <div class="stat-value" id="active-incidents">--</div>
+                    <div class="stat-description">Potential fire events</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-label">TOTAL NODES</div>
+                    <div class="stat-value" id="total-nodes">--</div>
+                    <div class="stat-description">Registered network nodes</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-label">RESOLVED INCIDENTS</div>
+                    <div class="stat-value" id="resolved-incidents">--</div>
+                    <div class="stat-description">Manually confirmed resolved</div>
+                </div>
+
+                <div class="stat-card runtime-card">
+                    <div class="stat-label">SYSTEM RUNTIME</div>
+                    <div class="stat-value" id="runtime">00:00:00</div>
+                    <div class="stat-description">Time since server startup</div>
+                </div>
+
+            </div>
+
+
+            <div class="section-heading node-heading">
+                <div>
+                    <h3>Monitoring Nodes</h3>
+                    <p>Individual node status and sensor information</p>
+                </div>
+                <span class="small-tag">5 REGISTERED NODES</span>
+            </div>
+
+            <div class="node-grid" id="node-grid">
+                <div class="loading">Loading nodes...</div>
+            </div>
+
+        </section>
+
+
+        <!-- NETWORK PAGE -->
+        <section class="page" id="page-network">
+
+            <div class="section-heading">
+                <div>
+                    <h3>Network Overview</h3>
+                    <p>Registered monitoring infrastructure</p>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>NODE</th>
+                                <th>SECTOR</th>
+                                <th>LOCATION</th>
+                                <th>STATUS</th>
+                                <th>CAMERA</th>
+                                <th>MQ-2</th>
+                            </tr>
+                        </thead>
+                        <tbody id="network-table">
+                            <tr><td colspan="6">Loading network...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- INCIDENT PAGE -->
+        <section class="page" id="page-incidents">
+
+            <div class="section-heading">
+                <div>
+                    <h3>Incident History</h3>
+                    <p>Recorded potential fire detections and their outcomes</p>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>TIME</th>
+                                <th>NODE</th>
+                                <th>SECTOR</th>
+                                <th>YOLO DETECTION</th>
+                                <th>CONFIDENCE</th>
+                                <th>MQ-2 RAW</th>
+                                <th>STATUS</th>
+                            </tr>
+                        </thead>
+                        <tbody id="incident-table">
+                            <tr><td colspan="7">No incidents recorded.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- LOGS PAGE -->
+        <section class="page" id="page-logs">
+
+            <div class="section-heading">
+                <div>
+                    <h3>System Logs</h3>
+                    <p>Server activity and node communication history</p>
+                </div>
+            </div>
+
+            <div class="panel logs-panel">
+                <div class="logs-header">
+                    <span>EVENT HISTORY</span>
+                    <span class="small-tag">LATEST FIRST</span>
+                </div>
+
+                <div id="logs-list">
+                    <div class="loading">Loading logs...</div>
+                </div>
+            </div>
+
+        </section>
+
+        <footer>
+            SURFIRE FOREST FIRE MONITORING SYSTEM
+            <span>LOCAL SERVER · PROTOTYPE VERSION 0.1</span>
+        </footer>
+
+    </main>
+</div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
